@@ -7,3 +7,9 @@
     @apply overflow-hidden;
   }
 }
+.hero-img {
+  background-image: url("/images/hero-img.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}

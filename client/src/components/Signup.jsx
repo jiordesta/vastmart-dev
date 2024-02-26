@@ -1,34 +1,55 @@
 import React, { useEffect, useState } from "react";
-import Footer from "../sections/Footer";
-
+import { useDispatch } from "react-redux";
+import { signup } from "../redux/reducers/user_slice";
+import Loader from "./Loader";
+import { error, success } from "../redux/reducers/notification_slice";
 export default function Signup({ setShowRegister }) {
   const [showPassword1, setShowPassword1] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
-
   const [confirm, setConfirm] = useState(true);
-
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
-  const [password1, setPasword1] = useState("");
+  const [password, setPassword] = useState("");
   const [password2, setPasword2] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const dispatch = useDispatch();
+  const handleSignup = () => {
+    if (!confirm) {
+      dispatch(error("Your password and confirm password are not the same"));
+      return;
+    }
+    setLoading(true);
+    dispatch(signup({ name, username, password })).then((res) => {
+      if (res.error) {
+        dispatch(error(res.error.message));
+      } else {
+        dispatch(
+          success("Great! now you have successfully created an account.")
+        );
+        setShowRegister(false);
+      }
+      setLoading(false);
+    });
+  };
 
   useEffect(() => {
-    if (password1 === "" || password2 === "") {
+    if (password === "" || password2 === "") {
       setConfirm(false);
       return;
     }
-    if (password1 === password2) {
+    if (password === password2) {
       setConfirm(true);
     } else {
       setConfirm(false);
     }
-  }, [password1, password2]);
+  }, [password, password2]);
 
   return (
     <div className="h-full text-color4">
       <div className="h-[85%]">
         <div className="w-full h-full flex justify-center items-center">
-          <div className="relative w-full md:w-[50%] lg:w-[40%] flex flex-col gap-2 md:border border-color1 border-dashed md:p-4 rounded-lg">
+          <div className="relative w-full md:w-[50%] lg:w-[40%] flex flex-col gap-2 md:border border-color1 md:p-4 rounded-lg">
             <div className="relative flex items-center">
               <span className="absolute inset-y-0 left-0 flex items-center pl-2">
                 <img
@@ -65,10 +86,10 @@ export default function Signup({ setShowRegister }) {
               <input
                 type={showPassword1 ? "text" : "password"}
                 placeholder="CREATE PASSWORD"
-                value={password1}
-                onChange={(e) => setPasword1(e.target.value)}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className={`w-full py-2 pl-12 pr-12 rounded-md focus:outline-none ${
-                  password1 === "" || password2 === ""
+                  password === "" || password2 === ""
                     ? "bg-color1 bg-opacity-10"
                     : confirm
                     ? "bg-[#65B741]"
@@ -120,7 +141,7 @@ export default function Signup({ setShowRegister }) {
                 value={password2}
                 onChange={(e) => setPasword2(e.target.value)}
                 className={`w-full py-2 pl-12 pr-12 rounded-md focus:outline-none ${
-                  password1 === "" || password2 === ""
+                  password === "" || password2 === ""
                     ? "bg-color1 bg-opacity-10"
                     : confirm
                     ? "bg-[#65B741]"
@@ -148,7 +169,14 @@ export default function Signup({ setShowRegister }) {
                 )}
               </span>
             </div>
-            <button className="bg-color1 p-4 rounded-lg text-xl font-semibold">
+            <button
+              className={`bg-color1 p-4 rounded-lg text-xl font-semibold ${
+                name && username && confirm ? "" : "cursor-not-allowed"
+              }`}
+              onClick={() => {
+                handleSignup();
+              }}
+            >
               Signup
             </button>
             <div className="flex gap-4 justify-center items-center text-color1">
@@ -162,10 +190,10 @@ export default function Signup({ setShowRegister }) {
             >
               signin to an account
             </button>
+            {loading && <Loader w={75} h={75} />}
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

@@ -10,6 +10,14 @@ export default {
         color4: "#EEEEEE",
       },
     },
+    screens: {
+      xm: "430px",
+      sm: "576px",
+      md: "768px",
+      lg: "992px",
+      xl: "1440px",
+      heroxl: "1400px",
+    },
   },
   plugins: [],
 };
