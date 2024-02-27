@@ -3,6 +3,7 @@ import Loader from "./Loader";
 import { useDispatch } from "react-redux";
 import { signin } from "../redux/reducers/user_slice";
 import { error, success } from "../redux/reducers/notification_slice";
+import { useNavigate } from "react-router-dom";
 
 export default function Signin({ setShowRegister }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -11,6 +12,7 @@ export default function Signin({ setShowRegister }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleLogin = () => {
@@ -20,6 +22,7 @@ export default function Signin({ setShowRegister }) {
         dispatch(error(res.error.message));
       } else {
         dispatch(success("Logged in successful"));
+        navigate("/");
       }
       setLoading(false);
     });

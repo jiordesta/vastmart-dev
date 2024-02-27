@@ -43,17 +43,18 @@ export default function Hero() {
   return (
     <>
       <section className="flex flex-col heroxl:flex-row gap-8 py-2 md:py-4 lg:py-8 text-color1">
-        <div className="w-full space-y-8">
-          <div className="bg-color3 py-2 w-full"></div>
-          <h1 className="text-5xl xm:text-6xl md:text-7xl lg:text-8xl font-semibold uppercase">
-            what is vastmart?
-          </h1>
+        <div className="w-full space-y-4 lg:space-y-8">
+          <div className="flex flex-row lg:flex-col">
+            <div className="bg-color3 px-1 lg:py-2 w-[10px] lg:w-full"></div>
+            <h1 className="text-5xl xm:text-6xl md:text-7xl xl:text-8xl font-semibold uppercase">
+              what is vastmart?
+            </h1>
+          </div>
           <p>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex nisi
             cumque possimus amet perferendis, officia mollitia enim modi
             consequatur omnis dolorem facilis ab fuga inventore. Lorem ipsum
-            dolor sit amet consectetur adipisicing elit. Dicta, eveniet
-            laudantium! Minus impedit laboriosam quibusdam.
+            dolor sit amet consectetur adipisicing eli
           </p>
           <div className="w-full flex justify-center lg:justify-start items-center">
             <button className="bg-color1 text-white px-8 py-2 uppercase rounded-lg w-full lg:w-[250px]">

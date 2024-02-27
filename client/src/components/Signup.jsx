@@ -15,6 +15,10 @@ export default function Signup({ setShowRegister }) {
 
   const dispatch = useDispatch();
   const handleSignup = () => {
+    if (!username || !password || !name) {
+      dispatch(error("All inputs should be filled"));
+      return;
+    }
     if (!confirm) {
       dispatch(error("Your password and confirm password are not the same"));
       return;
