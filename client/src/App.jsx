@@ -7,6 +7,7 @@ import { store } from "./redux/store";
 
 import Homepage from "./pages/Homepage";
 import Authpage from "./pages/Authpage";
+import Storespage from "./pages/Storespage";
 
 export default function App() {
   return (
@@ -20,6 +21,8 @@ export default function App() {
         <Routes>
           <Route path="/" Component={Homepage} />
           <Route path="/signin-signup" Component={Authpage} />
+          <Route path="/stores" Component={Storespage} />
+          <Route path="/stores/:category" Component={Storespage} />
         </Routes>
       </Router>
     </Provider>

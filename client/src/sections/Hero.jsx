@@ -1,6 +1,18 @@
 import React from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export default function Hero() {
+  const navigate = useNavigate();
+  const { user } = useSelector((state) => state.user);
+  const handleNavigate = (to) => {
+    if (!user) {
+      navigate("/signin-signup");
+    } else {
+      navigate(to);
+    }
+  };
+
   const typeStores = [
     {
       icon: "/icons/fashion.svg",
@@ -44,9 +56,9 @@ export default function Hero() {
     <>
       <section className="flex flex-col heroxl:flex-row gap-8 py-2 md:py-4 lg:py-8 text-color1">
         <div className="w-full space-y-4 lg:space-y-8">
-          <div className="flex flex-row lg:flex-col">
+          <div className="flex flex-row lg:flex-col gap-2">
             <div className="bg-color3 px-1 lg:py-2 w-[10px] lg:w-full"></div>
-            <h1 className="text-5xl xm:text-6xl md:text-7xl xl:text-8xl font-semibold uppercase">
+            <h1 className="text-4xl xm:text-6xl md:text-7xl xl:text-8xl font-semibold uppercase">
               what is vastmart?
             </h1>
           </div>
@@ -57,7 +69,10 @@ export default function Hero() {
             dolor sit amet consectetur adipisicing eli
           </p>
           <div className="w-full flex justify-center lg:justify-start items-center">
-            <button className="bg-color1 text-white px-8 py-2 uppercase rounded-lg w-full lg:w-[250px]">
+            <button
+              className="bg-color1 text-white px-8 py-2 uppercase rounded-lg w-full lg:w-[250px]"
+              onClick={() => handleNavigate("/stores")}
+            >
               get started
             </button>
           </div>
@@ -78,7 +93,10 @@ export default function Hero() {
             {typeStores.map((ts) => {
               return (
                 <li key={ts.title}>
-                  <div className="rounded-lg p-4 flex gap-4 border-2 border-color1">
+                  <div
+                    className="rounded-lg p-4 flex gap-4 border-2 border-color1 transition-all duration-100 hover:-translate-y-1 cursor-pointer"
+                    onClick={() => handleNavigate(`/stores/${ts.title}`)}
+                  >
                     <div className="flex justify-center items-center p-2">
                       <img src={ts.icon} width={45} height={45} alt="" />
                     </div>
@@ -95,7 +113,12 @@ export default function Hero() {
             })}
           </ul>
           <div className="w-full flex justify-center items-center">
-            <button className="uppercase underline">and more</button>
+            <button
+              className="uppercase underline"
+              onClick={() => handleNavigate("/stores")}
+            >
+              and more
+            </button>
           </div>
         </div>
       </section>

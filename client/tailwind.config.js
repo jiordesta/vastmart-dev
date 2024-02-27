@@ -17,6 +17,8 @@ export default {
       lg: "992px",
       xl: "1440px",
       heroxl: "1400px",
+      stlg: "1350px",
+      stxl: "1650px",
     },
   },
   plugins: [],

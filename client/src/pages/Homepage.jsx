@@ -65,15 +65,23 @@ export default function Homepage() {
         <div
           id="account-dropdown"
           className="absolute right-0 top-[75px] rounded-lg flex flex-col items-end gap-2 hidden bg-color1 bg-opacity-25 heroxl:bg-opacity-0 p-2"
+          onMouseLeave={() => {
+            const element = document.getElementById("account-dropdown");
+            if (element.classList.contains("hidden")) {
+              element.classList.remove("hidden");
+            } else {
+              element.classList.add("hidden");
+            }
+          }}
         >
-          <button className="bg-color4 text-color1 px-8 py-1 rounded-lg hover:text-color3 drop-shadow-lg underline bg-opacity-75 hover:bg-opacity-100">
-            my account
+          <button className="bg-color4 text-color1 px-8 py-1 rounded-lg hover:text-color3 drop-shadow-lg border border-color1">
+            myaccount
           </button>
-          <button className="bg-color4 text-color1 px-8 py-1 rounded-lg hover:text-color3 drop-shadow-lg underline bg-opacity-75 hover:bg-opacity-100">
-            my stores
+          <button className="bg-color4 text-color1 px-8 py-1 rounded-lg hover:text-color3 drop-shadow-lg border border-color1">
+            mystores
           </button>
           <button
-            className="bg-color4 text-color1 px-8 py-1 rounded-lg hover:text-color3 drop-shadow-lg underline bg-opacity-75 hover:bg-opacity-100"
+            className="bg-color4 text-color1 px-8 py-1 rounded-lg hover:text-color3 drop-shadow-lg border border-color1"
             onClick={() => handleLogout()}
           >
             logout
@@ -91,27 +99,35 @@ export default function Homepage() {
             <input
               type="text"
               placeholder="Search"
-              className="w-full py-2 pl-10 pr-4 rounded-lg focus:outline-none bg-color1 bg-opacity-5 placeholder:text-color1"
+              className="w-full py-2 pl-10 pr-4 rounded-lg focus:outline-none bg-color1 bg-opacity-5 placeholder:text-color1 border border-color1"
             />
             <span className="absolute inset-y-0 left-0 flex items-center pl-2">
               <img src="/icons/search-icon.svg" width={30} height={30} alt="" />
             </span>
           </div>
         </li>
-        <li className="rounded-lg flex flex-col gap-2 bg-color1 bg-opacity-25 heroxl:bg-opacity-0 p-2">
-          <button className="bg-color4 text-color1 px-8 py-1 rounded-lg hover:text-color3 drop-shadow-lg underline bg-opacity-75 hover:bg-opacity-100">
-            my account
-          </button>
-          <button className="bg-color4 text-color1 px-8 py-1 rounded-lg hover:text-color3 drop-shadow-lg underline bg-opacity-75 hover:bg-opacity-100">
-            my stores
-          </button>
-          <button
-            className="bg-color4 text-color1 px-8 py-1 rounded-lg hover:text-color3 drop-shadow-lg underline bg-opacity-75 hover:bg-opacity-100"
-            onClick={() => handleLogout()}
-          >
-            logout
-          </button>
-        </li>
+        {user ? (
+          <li className="rounded-lg flex flex-col gap-2 heroxl:bg-opacity-0 text-color1">
+            <button className="border border-color1 px-8 py-1 rounded-lg hover:text-color3">
+              myaccount
+            </button>
+            <button className="border border-color1 px-8 py-1 rounded-lg hover:text-color3">
+              mystores
+            </button>
+            <button
+              className="border border-color1 px-8 py-1 rounded-lg hover:text-color3"
+              onClick={() => handleLogout()}
+            >
+              logout
+            </button>
+          </li>
+        ) : (
+          <Link to={"/signin-signup"}>
+            <h1 className="border border-color1 px-8 py-1 rounded-lg hover:text-color3">
+              SIGNIN
+            </h1>
+          </Link>
+        )}
       </ul>
     );
   };
