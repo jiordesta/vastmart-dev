@@ -2,6 +2,7 @@ import { body, validationResult } from "express-validator";
 import { BadRequestError } from "../utils/custom_errors.js";
 
 import User from "../models/User.js";
+import Store from "../models/Store.js";
 
 const withValidationErrors = (validateValues) => {
   return [
@@ -31,4 +32,15 @@ export const validate_signup = withValidationErrors([
 export const validate_signin = withValidationErrors([
   body("username").notEmpty().withMessage("Username is Required"),
   body("password").notEmpty().withMessage("Password is Required"), //add custom for security
+]);
+
+export const validate_create_store = withValidationErrors([
+  body("name")
+    .notEmpty()
+    .withMessage("Name is Required")
+    .custom(async (name) => {
+      const store = await Store.findOne({ name });
+      if (store) throw new BadRequestError(`${name} is already taken`);
+    }),
+  body("desc").notEmpty().withMessage("Description is Required"),
 ]);

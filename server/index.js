@@ -10,8 +10,7 @@ import { error_handler } from "./middlewares/error_handler.js";
 import { cors_options } from "./configs/cors_options.js";
 ///routers
 import user_router from "./routers/user_router.js";
-//import product_router from './routers/product_router.js'
-//import order_router from './routers/order_router.js'
+import store_router from "./routers/store_router.js";
 
 ///configuration
 dotenv.config();
@@ -23,8 +22,7 @@ app.use(cors(cors_options));
 
 ///routers
 app.use("/user", user_router);
-//app.use('/product',product_router)
-//app.use('/order',order_router)
+app.use("/store", store_router);
 
 //errors
 app.use(error_handler);
