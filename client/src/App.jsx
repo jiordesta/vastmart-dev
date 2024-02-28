@@ -8,6 +8,8 @@ import { store } from "./redux/store";
 import Homepage from "./pages/Homepage";
 import Authpage from "./pages/Authpage";
 import Storespage from "./pages/Storespage";
+import Mystore from "./pages/Mystore";
+import Store from "./pages/Store";
 
 export default function App() {
   return (
@@ -23,6 +25,8 @@ export default function App() {
           <Route path="/signin-signup" Component={Authpage} />
           <Route path="/stores" Component={Storespage} />
           <Route path="/stores/:category" Component={Storespage} />
+          <Route path="/mystore/:id" Component={Mystore} />
+          <Route path="/stores/store/:id" Component={Store} />
         </Routes>
       </Router>
     </Provider>

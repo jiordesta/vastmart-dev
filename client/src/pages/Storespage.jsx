@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { create_store } from "../redux/reducers/store_slice";
+import { create_store, fetch_stores } from "../redux/reducers/store_slice";
 import { error, success } from "../redux/reducers/notification_slice";
 import Loader from "../components/Loader";
 
@@ -11,6 +11,8 @@ export default function Storespage() {
   const [value, setValue] = useState(category);
   const [mounted, setMounted] = useState(false);
 
+  const [categories, setCategories] = useState([]);
+  const { stores } = useSelector((state) => state.store);
   const [showModal, setShowModal] = useState(false);
 
   const dispatch = useDispatch();
@@ -21,6 +23,7 @@ export default function Storespage() {
       navigate("/");
     } else {
       setMounted(true);
+      dispatch(fetch_stores());
     }
   }, []);
 
@@ -42,25 +45,26 @@ export default function Storespage() {
     );
   };
 
-  const Store = () => {
+  const Store = ({ name, desc, _id, image }) => {
     return (
-      <div className="w-full h-[375px] bg-white rounded-lg text-color1 border border-color1 cursor-pointer">
+      <div
+        className="w-full h-[375px] bg-white rounded-lg text-color1 border border-color1 cursor-pointer"
+        onClick={() => {
+          navigate(`/stores/store/${_id}`);
+        }}
+      >
         <div
           className="h-3/4 rounded-t-md"
           style={{
-            backgroundImage: `url('https://fiverr-res.cloudinary.com/videos/so_2.469108,t_main1,q_auto,f_auto/ju19tvshnt5tgrwaqk0l/create-a-professional-website-in-wordpress.png')`,
+            backgroundImage: `url('${image}')`,
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
           }}
         />
         <div className="h-1/4 overflow-hidden p-2">
-          <h1 className="text-2xl font-semibold pb-1">Store name</h1>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique
-            temporibus unde sed quibusdam consectetur, debitis exercitationem
-            laboriosam laboru
-          </p>
+          <h1 className="text-2xl font-semibold pb-1">{name}</h1>
+          <p>{desc}</p>
         </div>
       </div>
     );
@@ -70,21 +74,51 @@ export default function Storespage() {
     const [name, setName] = useState("");
     const [desc, setDesc] = useState("");
     const [category, setCategory] = useState("any");
-
+    const [image, setImage] = useState(null);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
       document.body.style.overflow = showModal ? "hidden" : "auto";
     }, [showModal]);
 
+    const FileInput = ({ image, setImage }) => {
+      const fileInputRef = useRef(null);
+
+      const handleFileButtonClick = () => {
+        fileInputRef.current.click();
+      };
+
+      return (
+        <div className="flex gap-4 justify-center items-center">
+          <input
+            type="file"
+            ref={fileInputRef}
+            className="hidden"
+            onChange={(e) => setImage(e.target.files[0])}
+          />
+          <div
+            className="flex w-1/2 p-1 justify-start items-center border border-color1 border-dashed rounded-lg gap-4 cursor-pointer"
+            onClick={handleFileButtonClick}
+          >
+            <img src="/icons/image-icon.svg" width={35} alt="" />
+            <h1>{image ? "Change Image" : "Select Image"}</h1>
+          </div>
+          <div className="w-1/2">
+            {image && <h1 className="truncate underline">{image.name}</h1>}
+          </div>
+        </div>
+      );
+    };
+
     const handleCreateStore = () => {
       setLoading(true);
-      dispatch(create_store({ name, desc, category })).then((res) => {
+      dispatch(create_store({ name, desc, category, image })).then((res) => {
         if (res.error) {
           dispatch(error(res.error.message));
         } else {
           dispatch(success("Store Created Successfully"));
           setShowModal(false);
+          navigate(`/stores/store/${res.payload._id}`);
         }
         setLoading(false);
       });
@@ -92,7 +126,7 @@ export default function Storespage() {
 
     if (showModal) {
       return (
-        <div className="absolute h-screen inset-0 flex justify-center items-center rounded-lg bg-color1 bg-opacity-25 p-4 z-50">
+        <div className="absolute h-screen inset-0 flex justify-center items-center rounded-lg bg-black bg-opacity-75 p-4 z-50">
           <div className="w-full lg:w-1/4 flex flex-col gap-2 bg-white border border-color1 p-2 rounded-lg drop-shadow-lg">
             <input
               type="text"
@@ -113,7 +147,7 @@ export default function Storespage() {
               alt=""
               onClick={() => setShowModal(false)}
             />
-
+            <FileInput image={image} setImage={setImage} />
             <div className="flex gap-2">
               <div className="relative flex items-center w-3/4">
                 <span className="absolute inset-y-0 left-0 flex items-center pl-2">
@@ -127,6 +161,7 @@ export default function Storespage() {
                 <input
                   type="text"
                   placeholder="ADD NEW CATEGORY"
+                  value={category}
                   onChange={(e) => setCategory(e.target.value)}
                   className="w-full p-2 pl-12 rounded-md focus:outline-none bg-color2 bg-opacity-10 focus:bg-opacity-5 text-color1"
                 />
@@ -136,12 +171,13 @@ export default function Storespage() {
                 onChange={(e) => setCategory(e.target.value)}
               >
                 <option value="any">Any</option>
-                <option value="fashion">Fashion</option>
-                <option value="gadgets">Gadgets</option>
-                <option value="appliances">Appliances</option>
-                <option value="food">Food</option>
-                <option value="fruits">Fruits</option>
-                <option value="beverages">Bevarages</option>
+                {categories.map((c) => {
+                  return (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  );
+                })}
               </select>
             </div>
             <button
@@ -189,12 +225,13 @@ export default function Storespage() {
                 onChange={(e) => setValue(e.target.value)}
               >
                 <option value="">All</option>
-                <option value="fashion">Fashion</option>
-                <option value="gadgets">Gadgets</option>
-                <option value="appliances">Appliances</option>
-                <option value="food">Food</option>
-                <option value="fruits">Fruits</option>
-                <option value="beverages">Bevarages</option>
+                {categories.map((c) => {
+                  return (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  );
+                })}
               </select>
               <button
                 className="bg-color1 w-full md:w-1/4 text-color4 py-1 rounded-lg font-semibold bg-opacity-50 hover:bg-opacity-75 hover:text-color3"
@@ -204,36 +241,15 @@ export default function Storespage() {
               </button>
             </div>
             <ul className="py-2 grid grid-cols-1 stlg:grid-cols-2 stxl:grid-cols-3 gap-2">
-              <li>
-                <Store />
-              </li>
-              <li>
-                <Store />
-              </li>
-              <li>
-                <Store />
-              </li>
-              <li>
-                <Store />
-              </li>
-              <li>
-                <Store />
-              </li>
-              <li>
-                <Store />
-              </li>
-              <li>
-                <Store />
-              </li>
-              <li>
-                <Store />
-              </li>
-              <li>
-                <Store />
-              </li>
-              <li>
-                <Store />
-              </li>
+              {stores.map((store) => {
+                if (!categories.includes(store.category))
+                  categories.push(store.category);
+                return (
+                  <li key={store._id}>
+                    <Store {...store} />
+                  </li>
+                );
+              })}
             </ul>
           </div>
           <CreateStoreModal showModal={showModal} setShowModal={setShowModal} />
