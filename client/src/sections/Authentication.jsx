@@ -16,7 +16,9 @@ export default function Authentication() {
           <Signin setShowRegister={setShowRegister} />
         )}
       </section>
-      <Footer />
+      <div className="pb-4">
+        <Footer />
+      </div>
     </>
   );
 }
