@@ -4,5 +4,6 @@ const StoreSchema = new mongoose.Schema({
   desc: { type: String },
   category: { type: String, default: "any" },
   image: { type: String },
+  owner: { type: mongoose.Types.ObjectId },
 });
 export default mongoose.model("Store", StoreSchema);

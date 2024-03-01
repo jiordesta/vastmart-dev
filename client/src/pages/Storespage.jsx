@@ -7,10 +7,10 @@ import Loader from "../components/Loader";
 
 export default function Storespage() {
   const { user } = useSelector((state) => state.user);
-  const { category } = useParams();
+
+  const [category, setCategory] = useState(useParams().category);
   const [value, setValue] = useState(category);
   const [mounted, setMounted] = useState(false);
-
   const [categories, setCategories] = useState([]);
   const { stores } = useSelector((state) => state.store);
   const [showModal, setShowModal] = useState(false);
@@ -112,7 +112,9 @@ export default function Storespage() {
 
     const handleCreateStore = () => {
       setLoading(true);
-      dispatch(create_store({ name, desc, category, image })).then((res) => {
+      dispatch(
+        create_store({ name, desc, category, image, owner: user._id })
+      ).then((res) => {
         if (res.error) {
           dispatch(error(res.error.message));
         } else {
@@ -221,8 +223,8 @@ export default function Storespage() {
               </div>
               <select
                 className="w-full md:w-1/4 text-color1 bg-color1 bg-opacity-5 rounded-lg px-4 py-2"
-                value={value}
-                onChange={(e) => setValue(e.target.value)}
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
               >
                 <option value="">All</option>
                 {categories.map((c) => {
@@ -233,22 +235,32 @@ export default function Storespage() {
                   );
                 })}
               </select>
-              <button
-                className="bg-color1 w-full md:w-1/4 text-color4 py-1 rounded-lg font-semibold bg-opacity-50 hover:bg-opacity-75 hover:text-color3"
-                onClick={() => setShowModal(true)}
-              >
-                Create Store
-              </button>
+              <div className="w-full lg:w-1/2 flex gap-2 justify-center items-center">
+                <button
+                  className="px-4 w-full py-1 border border-color1 rounded-lg font-semibold"
+                  onClick={() => setShowModal(true)}
+                >
+                  New
+                </button>
+                <button
+                  className="px-4 w-full py-1 border border-color1 rounded-lg font-semibold"
+                  onClick={() => setShowModal(true)}
+                >
+                  mystores
+                </button>
+              </div>
             </div>
             <ul className="py-2 grid grid-cols-1 stlg:grid-cols-2 stxl:grid-cols-3 gap-2">
               {stores.map((store) => {
                 if (!categories.includes(store.category))
                   categories.push(store.category);
-                return (
-                  <li key={store._id}>
-                    <Store {...store} />
-                  </li>
-                );
+                if (store.category === category || !category) {
+                  return (
+                    <li key={store._id}>
+                      <Store {...store} />
+                    </li>
+                  );
+                }
               })}
             </ul>
           </div>

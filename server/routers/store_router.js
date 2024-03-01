@@ -12,7 +12,12 @@ const router = Router();
 
 router
   .route("/create_store")
-  .post(upload.single("image"), validate_create_store, create_store);
+  .post(
+    upload.single("image"),
+    authenticate,
+    validate_create_store,
+    create_store
+  );
 
 router.route("/fetch_stores").get(authenticate, fetch_stores);
 router.route("/fetch_store/:id").get(authenticate, fetch_store);

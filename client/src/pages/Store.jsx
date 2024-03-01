@@ -40,7 +40,7 @@ export default function Store() {
 
   const Product = () => {
     return (
-      <div className="w-full border border-color1 border-dashed rounded-lg bg-black bg-opacity-10 h-[300px] p-2 cursor-pointer hover:bg-opacity-25">
+      <div className="w-full border border-color1 border-dashed rounded-lg bg-black bg-opacity-10 p-2 cursor-pointer hover:bg-opacity-25">
         <div
           className="h-[200px] rounded-lg"
           style={{
@@ -51,7 +51,7 @@ export default function Store() {
           }}
         />
         <div>
-          <h1>Product Name</h1>
+          <h1 className="text-xl font-semibold">Product Name</h1>
           <h1 className="overflow-auto max-h-[50px]">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates
             aut cumque, expedita adipisci fuga neque?

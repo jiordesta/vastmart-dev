@@ -5,8 +5,15 @@ import { uploadImage } from "../utils/file_handler.js";
 
 export const create_store = async (req, res) => {
   const { name, desc, category } = req.body;
-  const url = await uploadImage(req, "/vastmart/stores/category/name");
-  const store = await Store.create({ name, desc, category, image: url });
+  const { _id } = req.user;
+  const url = await uploadImage(req, `/vastmart/stores/category/${name}`);
+  const store = await Store.create({
+    name,
+    desc,
+    category,
+    image: url,
+    owner: _id,
+  });
   if (!store)
     throw new BadRequestError("There was an error creating your store");
   res.status(StatusCodes.OK).json({ store });
